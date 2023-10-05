@@ -1,0 +1,60 @@
+{% extends "template.html" %} {% block title %}Register{% endblock %}
+{%comment%} {% endcomment %} {%block content %}
+<div
+  class="flex-col flex w-screen h-screen fixed top-0 left-0 mr-0 items-center justify-center bg-login-bg"
+>
+  <h1 class="font-extrabold text-2xl text-gray-200 mb-4">ToDo APP</h1>
+  <form
+    class="flex flex-col bg-slate-50 bg-opacity-25 backdrop-blur-md w-2/5 rounded-lg"
+    action="/auth/register"
+  >
+    {% csrf_token %}
+    <div class="p-10 flex flex-col">
+      <h1
+        class="text-black mb-3 text-center text-lg font-semibold border-b-2 pb-3"
+      >
+        Create an Account
+      </h1>
+      <span class="text-sm ml-1 mb-2 text-gray-800"
+        >* Please enter your Full name</span
+      >
+      <input
+        class="mb-3 p-3 rounded-md"
+        name="name"
+        placeholder="Full Name *"
+        type="text"
+      />
+      <span class="text-sm ml-1 mb-2 text-gray-800"
+        >* Please enter your E-mail ID</span
+      >
+      <input
+        class="mb-3 p-3 rounded-md"
+        name="email"
+        placeholder="E-mail *"
+        type="email"
+      />
+      <span class="text-sm ml-1 mb-2 text-gray-800">* Set your password</span>
+      <input
+        class="mb-10 p-3 rounded-md"
+        name="password"
+        placeholder="Set Password *"
+        type="password"
+      />
+
+      <center>
+        <button
+          class="bg-blue-600 rounded-lg hover:bg-pink-700 p-3 text-white w-min items-center pl-10 pr-10"
+        >
+          Register
+        </button>
+      </center>
+      <span class="text-center ht mt-4 text-sm"
+        >Already have an account?
+        <a class="text-pink-600 hover:text-blue-900" href="/login"
+          >Login</a
+        ></span
+      >
+    </div>
+  </form>
+</div>
+{% endblock %}
