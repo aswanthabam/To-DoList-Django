@@ -1,0 +1,45 @@
+{% extends "_base.html" %}
+{% load compress %}
+{% block title %}Register{% endblock title %}
+
+{% block head %}
+  {% compress css %}
+    <link rel="stylesheet" href="/static/css/form.css" type="text/css" charset="utf-8">
+  {%endcompress%}
+  <script>
+    function togglePassword() {
+      var pass = document.querySelector("#password");
+      if(pass.type == "password") pass.type = "text";
+      else pass.type = "password";
+    }
+  </script> 
+{% endblock head %}
+{% block content %}
+  <div class="container container-fluid  d-flex ">
+    <h1 class="text-center">To-Do App</h1>
+    <form class="container-sm text-center" action="/auth/register/" method="post">
+      <h2>Register</h2>
+      <span class="info">Fill Following details to create an account</span>
+      <span class="error {% if error %}visible{%endif%}">{% if error %}{{error}}{%endif%}</span>
+      {% csrf_token %}
+      <div class="input-group mb-3">
+        <input type="text" class="form-control" placeholder="First Name" name="fname" required {% if post.fname %}value="{{post.fname}}"{% endif %}>
+      </div>
+      <div class="input-group mb-3">
+        <input type="text" class="form-control" placeholder="Second Name" name="username" required>
+      </div>
+      <div class="input-group mb-3">
+        <input type="email" class="form-control" placeholder="E-Mail" name="email" required>
+      </div>
+      <div class="input-group mb-3">
+        <input type="text" class="form-control" placeholder="Choose Username" name="username" required>
+      </div>
+      <div class="input-group mb-3">
+        <span onclick="togglePassword()" class="input-group-text" id="basic-addon1"><i class="bi bi-eye"></i></span>
+        <input id="password" type="password" class="form-control" placeholder="password" required>
+      </div>
+      <button type="submit" class="btn btn-lg btn-primary">Register</button>
+      <span>Already have an account? <a href="/login">Login</a></span>
+    </form>
+  </div>
+{% endblock content %}

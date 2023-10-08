@@ -3,3 +3,4 @@ django-compressor
 psycopg2-binary
 djangorestframework
 tzdata
+python-dotenv

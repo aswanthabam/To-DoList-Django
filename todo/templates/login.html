@@ -1,0 +1,41 @@
+{% extends "_base.html" %}
+{% load compress %}
+{% block title %}Login{% endblock title %}
+
+{% block head %}
+  {% compress css %}
+    <link rel="stylesheet" href="/static/css/form.css" type="text/css" charset="utf-8">
+  {%endcompress%}
+  {% compress js inline %}
+    <script src="/static/js/login.js" type="text/javascript" charset="utf-8"></script>
+  {% endcompress %}
+  <script>
+    function togglePassword() {
+      var pass = document.querySelector("#password");
+      if(pass.type == "password") pass.type = "text";
+      else pass.type = "password";
+    }
+  </script>
+{% endblock head %}
+
+{% block content %}
+  <div class="container container-fluid  d-flex ">
+    <h1 class="text-center">To-Do App</h1>
+    <form class="container-sm text-center" action="/auth/login/" method="post">
+      <h2>Login</h2>
+      <span class="info">Enter your username and password to continue</span>
+      <span class="error">Enter your username and password to continue</span>
+      {% csrf_token %}
+      <div class="input-group mb-3">
+        <span class="input-group-text" id="basic-addon1">@</span>
+        <input name="username" type="text" class="form-control" placeholder="Username" required>
+      </div>
+      <div class="input-group mb-3">
+        <span onclick="togglePassword()" class="input-group-text" id="basic-addon1"><i class="bi bi-eye"></i></span>
+        <input id="password" type="password" class="form-control" placeholder="password" required>
+      </div>
+      <button type="submit" class="btn btn-primary">Login</button>
+      <span>Don't have an account? <a href="/register">Register</a></span>
+    </form>
+  </div>
+{% endblock content %}
