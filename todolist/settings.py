@@ -144,8 +144,8 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 COMPRESS_ROOT = BASE_DIR / 'static'
   
-COMPRESS_ENABLED = False
+COMPRESS_ENABLED = False # Change in production
   
-# STATICFILES_FINDERS = ('compressor.finders.CompressorFinder','django.contrib.staticfiles.finders.AppDirectoriesFinder')
+#STATICFILES_FINDERS = ('compressor.finders.CompressorFinder','django.contrib.staticfiles.finders.AppDirectoriesFinder') # Removw in production
 
 AUTH_USER_MODEL = "todo.CustomUser"

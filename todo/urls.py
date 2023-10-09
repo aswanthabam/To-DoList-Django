@@ -6,5 +6,6 @@ urlpatterns = [
     path('login/',login,name="login"),
     path('register/',register,name="login"),
     path('logout/',logout,name="logout"),
-    path('add-task/',add_task,name="add-task")
+    path('add-task/',add_task,name="add-task"),
+    path("complete_task",complete_task,name="complete_task")
 ]

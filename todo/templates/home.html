@@ -6,6 +6,37 @@
   {% compress css %}
     <link rel="stylesheet" href="/static/css/home.css" type="text/css" charset="utf-8">
   {%endcompress%}
+  <script>
+    function show_form() {
+      document.querySelector(".dialog").classList.add("visible")
+    }
+    function hide_form() {
+      document.querySelector(".dialog"). classList.remove("visible")
+    }
+    function set_task_status(val,t_id) {
+      c = "0"
+      if(val.checked) {
+        c = "1"
+      }
+      form = document.createElement("form")
+      form.action = "/complete_task"
+      form.method = "POST"
+      form.style.display = "none"
+      
+      input = document.createElement("input")
+      input.name = "task_id"
+      input.value = ""+t_id
+      form.innerHTML += "<input name='csrfmiddlewaretoken' value='{{csrf_token}}'>"
+      form.appendChild(input)
+      input = document.createElement("input")
+      input.name = "completed"
+      input.value = c
+      form.appendChild(input)
+      document.body.appendChild(form)
+      form.submit()
+      form.innerHTML = ""
+    }
+  </script>
 {% endblock head %}
 {% block content%}
 <div class="container container-fluid ">
@@ -13,7 +44,9 @@
     <img src="{% static "image/planning.png"%}">
     <h1>To Do App</h1>
   </div>
-  <form class="container-sm text-center" action="/add-task/" method="post">
+  <button onclick="show_form()" type="button" class="btn btn-outline-primary">Add Task <i class="bi bi-plus"></i></button>
+  <div class="dialog d-flex">
+  <form class=" container-sm text-center" action="/add-task/" method="post">
     {% csrf_token %}
     <h2>Add Task</h2>
     <div class="input-group mb-3">
@@ -23,7 +56,32 @@
       <span style="height:100%" class="input-group-text">@ Date (optional)</span>
     <input style="height:100%" type="datetime-local" class="form-control" name="date_of_completion" placeholder="Choose task end date"/>
     </div>
-  <button type="submit" class="btn btn-lg btn-primary">Add Task</button>
+  <div style="width:100%" class="d-flex justify-content-between content-fluid">
+      <button onclick="hide_form()" class="btn btn-outline-secondary">Cancel</button>
+      <button type="submit" class="btn btn-lg btn-primary">Add Task</button>
+
+  </div>
 </form>
+</div>
+<div style="margin: 20px 0" class="container container-fluid">
+  <div class="btn-group" role="group" aria-label="Vertical radio toggle button group">
+  <input type="radio" class="btn-check" name="vbtn-radio" id="vbtn-radio1" autocomplete="off" {% if texpired %}checked{%endif%}>
+  <a href="/?s=e" class="btn btn-outline-danger" for="vbtn-radio1">Expired</a>
+  <input type="radio" class="btn-check" name="vbtn-radio" id="vbtn-radio2" autocomplete="off" {% if ttask %}checked{%endif%}>
+  <a href="/" class="btn btn-outline-warning" for="vbtn-radio2">Tasks</a>
+  <input type="radio" class="btn-check" name="vbtn-radio" id="vbtn-radio3" autocomplete="off" {% if tcompleted %}checked{%endif%}>
+  <a href="/?s=c" class="btn btn-outline-success" for="vbtn-radio3">Completed</a>
+</div>
+  
+<ul class="list-group">
+  {% for task in tasks %}
+  <li class="list-group-item item d-flex justify-content-between align-items-center">
+    <div><input onchange="set_task_status(this,{{task.task_id}})" value="1" class="form-check-input me-1" type="checkbox" id="firstCheckboxStretched{{task.task_id}}" {% if task.completed %}checked {% endif %}>
+    <label class="form-check-label stretched-link" for="firstCheckboxStretched{{task.task_id}}">{{task.title}}</label></div>
+    {% if task.date_of_completion %}<span class="badge bg-primary rounded-pill">{{task.date_of_completion}}</span>{% endif %}
+  </li>
+  {% endfor %}
+</ul>
+</div>
 </div>
 {%endblock%}
