@@ -1,0 +1,22 @@
+{% extends '_base.html' %}
+{% load compress %}
+{% load static %}
+{% block title %} Home {%endblock%} 
+{% block head %}
+  {% compress css %}
+    <link rel="stylesheet" href="/static/css/get-started.css" type="text/css" charset="utf-8">
+  {%endcompress%}
+{% endblock head %}
+{% block content%}
+<div class="content-fluid d-flex container">
+  <div class="header d-flex"> 
+      <img src="{% static "image/planning.png"%}">
+    <h1>To Do App</h1>
+  </div>
+  <span>Continue with an account</span>
+  <div class="login-buttons">
+    <a href="/login"class="btn btn-secondary">Login</a>
+    <a href="/register"class="btn btn-primary">Sign Up</a>
+  </div>
+</div>
+{%endblock%}

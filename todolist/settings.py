@@ -40,7 +40,6 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'todo',
-    'user',
     'compressor'
 ]
 
@@ -52,6 +51,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'todo.middleware.ToastMiddleWare'
 ]
 
 ROOT_URLCONF = 'todolist.urls'
@@ -75,7 +75,14 @@ TEMPLATES = [
 WSGI_APPLICATION = 'todolist.wsgi.application'
 
 # Database
-# https://docs.djangoproject.com/en/4.1/ref/settings/#databases
+
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+#     }
+# }
+
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql_psycopg2",
@@ -133,6 +140,8 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 COMPRESS_ROOT = BASE_DIR / 'static'
   
-COMPRESS_ENABLED = True
+COMPRESS_ENABLED = False
   
 STATICFILES_FINDERS = ('compressor.finders.CompressorFinder','django.contrib.staticfiles.finders.AppDirectoriesFinder')
+
+AUTH_USER_MODEL = "todo.CustomUser"

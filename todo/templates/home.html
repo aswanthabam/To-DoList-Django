@@ -1,4 +1,29 @@
-{% extends '_base.html' %} {% block title %} Home {%endblock%} 
+{% extends '_base.html' %}
+{% load compress %}
+{% load static %}
+{% block title %} Home {%endblock%} 
+{% block head %}
+  {% compress css %}
+    <link rel="stylesheet" href="/static/css/home.css" type="text/css" charset="utf-8">
+  {%endcompress%}
+{% endblock head %}
 {% block content%}
-<div class=""></div>
+<div class="container container-fluid ">
+  <div class="header d-flex"> 
+    <img src="{% static "image/planning.png"%}">
+    <h1>To Do App</h1>
+  </div>
+  <form class="container-sm text-center" action="/add-task/" method="post">
+    {% csrf_token %}
+    <h2>Add Task</h2>
+    <div class="input-group mb-3">
+    <textarea style="height: auto" name="title" class="form-control task" placeholder="Enter Task ..." required></textarea>
+    </div>
+    <div class="input-group mb-3">
+      <span style="height:100%" class="input-group-text">@ Date (optional)</span>
+    <input style="height:100%" type="datetime-local" class="form-control" name="date_of_completion" placeholder="Choose task end date"/>
+    </div>
+  <button type="submit" class="btn btn-lg btn-primary">Add Task</button>
+</form>
+</div>
 {%endblock%}
