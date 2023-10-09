@@ -10,11 +10,15 @@
       "src": "buildscript.sh",
       "use": "@vercel/static-build",
       "config": {
-        "distDir": ""
+        "distDir": "staticfiles"
       }
     }
   ],
   "routes": [
+    {
+      "src": "/static/(.*)",
+      "dest": "/static/$1"
+    },
     {
       "src": "/(.*)",
       "dest": "todolist/wsgi.py"
