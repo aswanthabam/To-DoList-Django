@@ -8,10 +8,8 @@
     },
     {
       "src": "buildscript.sh",
-      "use": "@vercel/static-build",
-      "config": {
-        "distDir": "static"
-      }
+      "use": "@vercel/static-build"
+      
     }
   ],
   "routes": [
@@ -19,6 +17,6 @@
       "src": "/(.*)",
       "dest": "todolist/wsgi.py"
     }
-  ],
-  "outputDirectory": "static"
+  ]
+  
 }
