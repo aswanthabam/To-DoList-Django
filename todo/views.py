@@ -140,3 +140,90 @@ def complete_task(request):
   else:
     request.session["toast"] = "Please login to continue"
     return redirect("/login")
+"""
+Manage Tasks
+"""  
+def manage_tasks(request):
+  if request.user.is_authenticated:
+    if request.method == "GET":
+      state = request.GET.get("s")
+      ctx = {}
+      if state == "e":
+        # expired 
+        tasks = Task.objects.filter(user=request.user,completed=False,date_of_completion__lt= datetime.now())
+        ctx["texpired"] = True
+        pass
+      elif state == "c":
+        # completed
+        tasks = Task.objects.filter(user=request.user,completed=True)
+        ctx["tcompleted"] = True
+      else:
+        tasks = Task.objects.filter(Q(date_of_completion__gt=datetime.now()) | Q(date_of_completion__isnull=True),user=request.user,completed=False)
+        ctx["ttask"] = True
+      ctx["tasks"] = tasks
+      return render(request,"manage-tasks.html",ctx)
+    request.session['toast'] = "Invalid Route!"
+    return redirect("/")
+  return render(request,"get-started.html") 
+
+"""
+Edit Task Route
+"""
+def edit_task(request):
+  if request.user.is_authenticated:
+    if request.method == "POST":
+      re = request.GET.get("return")
+      re = "/" if re == None else re
+      task_id = request.POST.get("task_id")
+      title = request.POST.get('title')
+      date_co = request.POST.get('date_of_completion')
+      if task_id == None:
+        request.session['toast'] = "Invalid request!"
+        return redirect(re)
+      task = Task.objects.get(task_id=task_id)
+      if task == None:
+        request.session['toast'] = "Task not found!"
+        return redirect(re)
+      task.title = title = task.title if title == None else title
+      task.date_of_completion = task.date_of_completion if date_co == None else (None if date_co == "" else date_co)
+      try:
+        task.save()
+      except Exception as e:
+        print(e)
+        request.session['toast'] = "An error occured"
+        return redirect(re)
+      request.session['toast'] = "Successfully edited task! task@"+task_id
+      return redirect(re)
+  else:
+    request.session['toast'] = "You are not logged in!"
+    return redirect("/login")
+  return redirect("/")
+
+"""
+Delete task
+"""
+def delete_task(request):
+  if request.user.is_authenticated:
+    if request.method == "POST":
+      re = request.GET.get("return")
+      re = "/" if re == None else re
+      task_id = request.POST.get("task_id")
+      if task_id == None:
+        request.session['toast'] = "Invalid request!"
+        return redirect(re)
+      task = Task.objects.get(task_id=task_id)
+      if task == None:
+        request.session['toast'] = "Task not found!"
+        return redirect(re)
+      try:
+        task.delete()
+      except Exception as e:
+        print(e)
+        request.session['toast'] = "An error occured"
+        return redirect(re)
+      request.session['toast'] = "Successfully deleted task! task@"+task_id
+      return redirect(re)
+  else:
+    request.session['toast'] = "You are not logged in!"
+    return redirect("/login")
+  return redirect("/")

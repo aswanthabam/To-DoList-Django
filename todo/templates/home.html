@@ -12,6 +12,7 @@
     }
     function hide_form() {
       document.querySelector(".dialog"). classList.remove("visible")
+      return false;
     }
     function set_task_status(val,t_id) {
       c = "0"
@@ -39,49 +40,68 @@
   </script>
 {% endblock head %}
 {% block content%}
-<div class="container container-fluid ">
+<div class="container container-fluid" style="overflow-y:auto; height: auto">
   <div class="header d-flex"> 
     <img src="{% static "image/planning.png"%}">
     <h1>To Do App</h1>
+    <p class="text-center"><h5>Welcome {{request.user.first_name}},</h5><br/>
+      Start adding your tasks, begin by clicking the add button. <br/>
+      <div class="d-flex"><a href="/logout">Logout?</a> &nbsp;  &nbsp; <a href="#help">Need Help?</a></div>
+    </p>
   </div>
   <button onclick="show_form()" type="button" class="btn btn-outline-primary">Add Task <i class="bi bi-plus"></i></button>
   <div class="dialog d-flex">
-  <form class=" container-sm text-center" action="/add-task/" method="post">
-    {% csrf_token %}
-    <h2>Add Task</h2>
-    <div class="input-group mb-3">
-    <textarea style="height: auto" name="title" class="form-control task" placeholder="Enter Task ..." required></textarea>
-    </div>
-    <div class="input-group mb-3">
-      <span style="height:100%" class="input-group-text">@ Date (optional)</span>
-    <input style="height:100%" type="datetime-local" class="form-control" name="date_of_completion" placeholder="Choose task end date"/>
-    </div>
-  <div style="width:100%" class="d-flex justify-content-between content-fluid">
-      <button onclick="hide_form()" class="btn btn-outline-secondary">Cancel</button>
-      <button type="submit" class="btn btn-lg btn-primary">Add Task</button>
-
+    <form class=" container-sm text-center" action="/add-task/" method="post">
+      {% csrf_token %}
+      <h2>Add Task</h2>
+      <div class="input-group mb-3">
+        <textarea style="height: auto" name="title" class="form-control task" placeholder="Enter Task ..." required></textarea>
+      </div>
+      <div class="input-group mb-3">
+        <span style="height:100%" class="input-group-text">@ Date (optional)</span>
+        <input style="height:100%" type="datetime-local" class="form-control" name="date_of_completion" placeholder="Choose task end date"/>
+      </div>
+      <div style="width:100%" class="d-flex justify-content-between content-fluid">
+          <button onclick="return hide_form()" class="btn btn-outline-secondary">Cancel</button>
+          <button type="submit" class="btn btn-lg btn-primary">Add Task</button>
+      </div>
+    </form>
   </div>
-</form>
-</div>
-<div style="margin: 20px 0" class="container container-fluid">
-  <div class="btn-group" role="group" aria-label="Vertical radio toggle button group">
-  <input type="radio" class="btn-check" name="vbtn-radio" id="vbtn-radio1" autocomplete="off" {% if texpired %}checked{%endif%}>
-  <a href="/?s=e" class="btn btn-outline-danger" for="vbtn-radio1">Expired</a>
-  <input type="radio" class="btn-check" name="vbtn-radio" id="vbtn-radio2" autocomplete="off" {% if ttask %}checked{%endif%}>
-  <a href="/" class="btn btn-outline-warning" for="vbtn-radio2">Tasks</a>
-  <input type="radio" class="btn-check" name="vbtn-radio" id="vbtn-radio3" autocomplete="off" {% if tcompleted %}checked{%endif%}>
-  <a href="/?s=c" class="btn btn-outline-success" for="vbtn-radio3">Completed</a>
-</div>
-  
-<ul class="list-group">
-  {% for task in tasks %}
-  <li class="list-group-item item d-flex justify-content-between align-items-center">
-    <div><input onchange="set_task_status(this,{{task.task_id}})" value="1" class="form-check-input me-1" type="checkbox" id="firstCheckboxStretched{{task.task_id}}" {% if task.completed %}checked {% endif %}>
-    <label class="form-check-label stretched-link" for="firstCheckboxStretched{{task.task_id}}">{{task.title}}</label></div>
-    {% if task.date_of_completion %}<span class="badge bg-primary rounded-pill">{{task.date_of_completion}}</span>{% endif %}
-  </li>
-  {% endfor %}
-</ul>
-</div>
+  <div class="container-fluid d-flex justify-content-end" style="height: auto"><a href="/manage-tasks" class="btn btn-primary">Manage Tasks</a></div>
+  <div class="container-fluid" style="background: #77777730; margin-top: 20px; border-radius: 30px; height: auto ">
+    <div style="margin: 20px 0" class="container-fluid"  style="height: auto; min-height: calc(100% - 30px); flex-direction: column">
+      <div class="btn-group" role="group" aria-label="Vertical radio toggle button group">
+        <input type="radio" class="btn-check" name="vbtn-radio" id="vbtn-radio1" autocomplete="off" {% if texpired %}checked{%endif%}>
+        <a href="/?s=e" class="btn btn-outline-danger" for="vbtn-radio1">Expired</a>
+        <input type="radio" class="btn-check" name="vbtn-radio" id="vbtn-radio2" autocomplete="off" {% if ttask %}checked{%endif%}>
+        <a href="/" class="btn btn-outline-warning" for="vbtn-radio2">Pending</a>
+        <input type="radio" class="btn-check" name="vbtn-radio" id="vbtn-radio3" autocomplete="off" {% if tcompleted %}checked{%endif%}>
+        <a href="/?s=c" class="btn btn-outline-success" for="vbtn-radio3">Completed</a>
+      </div>
+      <ul class="list-group d-flex">
+        {% for task in tasks %}
+        <li class="list-group-item item d-flex justify-content-between align-items-center">
+          <div><input onchange="set_task_status(this,{{task.task_id}})" value="1" class="form-check-input me-1" type="checkbox" id="firstCheckboxStretched{{task.task_id}}" {% if task.completed %}checked {% endif %}>
+          <label class="form-check-label stretched-link" for="firstCheckboxStretched{{task.task_id}}">{{task.title}}</label></div>
+          {% if task.date_of_completion %}<span class="badge bg-primary rounded-pill">{{task.date_of_completion}}</span>{% endif %}
+        </li>
+        {% endfor %}
+      </ul>
+    </div>
+  </div>
+  <br/>
+  <h5 id="help" style="width: 100%; text-align: left">Help</h5>
+  <ul>
+    <li>Welcome to To Do List App, Here you can manage your tasks, click add task to begin</li>
+    <li>For marking a task as completed click the check box</li>
+    <li>For editing or deleting click manage tasks</li>
+    <li>For More information checkout my 
+      <ul>
+        <li><a href="https://github.com/aswanthabam">Github</a></li>
+        <li><a href="https://aswanthvc.web.app">Portfolio</a></li>
+        <li><a href="https://www.linkedin.com/in/aswanth-vc-2612b91b9">Linkedin</a></li>
+      </ul>
+    </li>
+  </ul>
 </div>
 {%endblock%}

@@ -1,0 +1,109 @@
+  {% extends '_base.html' %}
+  {% load compress %}
+  {% load static %}
+  {% block title %} Manage Tasks {%endblock%} 
+  {% block head %}
+    {% compress css %}
+      <link rel="stylesheet" href="/static/css/home.css" type="text/css" charset="utf-8">
+    {%endcompress%}
+    <script>
+      function show_form() {
+        document.querySelector(".dialog").classList.add("visible")
+      }
+      function hide_form() {
+        document.querySelector(".dialog"). classList.remove("visible")
+        return false;
+      }
+      function set_task_status(val,t_id) {
+        c = "0"
+        if(val.checked) {
+          c = "1"
+        }
+        form = document.createElement("form")
+        form.action = "/complete_task"
+        form.method = "POST"
+        form.style.display = "none"
+        
+        input = document.createElement("input")
+        input.name = "task_id"
+        input.value = ""+t_id
+        form.innerHTML += "<input name='csrfmiddlewaretoken' value='{{csrf_token}}'>"
+        form.appendChild(input)
+        input = document.createElement("input")
+        input.name = "completed"
+        input.value = c
+        form.appendChild(input)
+        document.body.appendChild(form)
+        form.submit()
+        form.innerHTML = ""
+      }
+      function show_edit_dialog(id,title,date) {
+        document.querySelector("#edit-task-title").value = title;
+        document.querySelector("#edit-task-date").value = date;
+        document.querySelector("#edit-task-id").value = id;
+        show_form()
+      }
+      function delete_task(id) {
+        document.querySelector("#delete-task-id").value = id;
+        document.querySelector("#delete-task-form").submit()
+      }
+    </script>
+  {% endblock head %}
+  {% block content%}
+  <div class="container container-fluid ">
+    <div class="header d-flex"> 
+      <h1>Manage Your Tasks</h1>
+    </div>
+    <p>
+    Here you can edit or delete your tasks (enjoy :[])
+    </p>
+    <form style="display:none" id="delete-task-form" action="/delete/?return=/manage-tasks" method="POST">
+      {% csrf_token %}
+      <input type="text" name="task_id" id="delete-task-id"/>
+    </form>
+    <div class="dialog d-flex">
+    <form class=" container-sm text-center" action="/edit-task/?return=/manage-tasks" method="post">
+      {% csrf_token %}
+      <h2>Edit Task</h2>
+      <input id="edit-task-id" style="display:none" type="number" name="task_id"/>
+      <div class="input-group mb-3">
+        <textarea id="edit-task-title" style="height: auto" name="title" class="form-control task" placeholder="Enter Task ..." required></textarea>
+      </div>
+      <div class="input-group mb-3">
+        <span style="height:100%" class="input-group-text">@ Date (optional)</span>
+        <input id="edit-task-date" style="height:100%" type="datetime-local" class="form-control" name="date_of_completion" placeholder="Choose task end date"/>
+      </div>
+    <div style="width:100%" class="d-flex justify-content-between content-fluid">
+        <button onclick="return hide_form()" class="btn btn-outline-secondary">Cancel</button>
+        <button type="submit" class="btn btn-lg btn-primary">Edit Task</button>
+    </div>
+  </form>
+  </div>
+  <div style="margin: 20px 0" class="container container-fluid">
+    <div class="btn-group" role="group" aria-label="Vertical radio toggle button group">
+    <input type="radio" class="btn-check" name="vbtn-radio" id="vbtn-radio1" autocomplete="off" {% if texpired %}checked{%endif%}>
+    <a href="?s=e" class="btn btn-outline-danger" for="vbtn-radio1">Expired</a>
+    <input type="radio" class="btn-check" name="vbtn-radio" id="vbtn-radio2" autocomplete="off" {% if ttask %}checked{%endif%}>
+    <a href="?" class="btn btn-outline-warning" for="vbtn-radio2">Pending</a>
+    <input type="radio" class="btn-check" name="vbtn-radio" id="vbtn-radio3" autocomplete="off" {% if tcompleted %}checked{%endif%}>
+    <a href="?s=c" class="btn btn-outline-success" for="vbtn-radio3">Completed</a>
+  </div>
+  <div class="container-fluid d-flex justify-content-start"><a href="/" class="btn btn-primary">Back to Home</a></div>
+  <div class="container-fluid" style="padding-top: 10px">
+    {% for task in tasks %}
+    <li class="d-flex justify-content-between align-items-center" style="padding: 10px; border: 1px solid #44444440">
+      
+        <p>{{task.title}}</p>
+      <div>
+        {% if task.date_of_completion %}<span class="badge bg-primary rounded-pill">{{task.date_of_completion}}</span>{% endif %}
+        <div class="btn-group me-2" role="group" aria-label="Second group">
+          <button onclick="show_edit_dialog('{{task.task_id}}','{{task.title}}','{{task.date_of_completion|date:"Y-m-d\TH:i"}}')" type="button" class="btn btn-secondary"><i class="bi bi-pen-fill"></i></button>
+          <button onclick="delete_task('{{task.task_id}}')" type="button" class="btn btn-secondary"><i class="bi bi-trash3"></i></button>  
+        </div>
+      </div>
+    </li>
+    {% endfor %}
+  </div>
+  </div>
+  </div>
+  {%endblock%}
