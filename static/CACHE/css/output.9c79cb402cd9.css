@@ -1,1 +1,0 @@
-.container{position:fixed;width:100vw;height:100vh;overflow:auto;display:flex;align-items:center;justify-content:center;flex-direction:column;background:linear-gradient(45deg,rgb(6,102,139),rgb(55,3,114))}.container h1{margin-bottom:40px}.container form h2{margin-bottom:20px}.container form .info{margin-bottom:20px;color:#222}.container form .error{margin-bottom:20px;color:#f00}

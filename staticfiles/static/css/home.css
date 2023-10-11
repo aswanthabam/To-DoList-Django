@@ -19,16 +19,17 @@
   overflow: auto;
 }
 .container form {
-  width: 75%;
+  width: 80%;
   height: auto;
-  padding: 40px;
-  background: #22222250;
+  padding: 10px 15px;
+  background: #a5d2d8;
   box-shadow: 1px 1px 10px #ffffff30;
   border-radius: 20px;
   display: flex;
   align-items: center;
   flex-direction: column;
   justify-content: center;
+  box-shadow: 1px 1px 10px #22121130;
 }
 form input {
   margin-bottom: 20px;
@@ -37,9 +38,34 @@ form input {
   margin-bottom: 20px;
   
 }
-@media screen and (max-width: 640px) {
+ul {
+  width: 100%;
+  margin-top: 20px;
+}
+.dialog {
+  position: fixed;
+  top: -100%;
+  z-index: 10;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+.dialog > form {
+  margin: auto auto;
+}
+.dialog.visible {
+  display: block;
+  background: #8f8f8f9a;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw !important;
+  height: 100vh;
+}
+@media screen and (max-width: 680px) {
   .container form {
-    width: auto;
-    padding: 40px;
+    width: calc(100% - 30px);
+    padding: 10px 15px;
   }
 }
